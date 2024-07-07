@@ -14,7 +14,7 @@ Game::Game() {
     view->setScene(scene);
     scene->setSceneRect(0, 0, view->width(), view->height());
     scene->setBackgroundBrush(QBrush("#124552"));
-
+    player.draw(scene);
 }
 
 Game::~Game() {

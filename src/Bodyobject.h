@@ -2,9 +2,10 @@
 #define AMIN_BODYOBJECT_H
 
 #include <QGraphicsPixmapItem>
+#include <QObject>
 #include "Position.h"
 
-class Bodyobject {
+class Bodyobject : public QObject {
 protected:
     int width;
     int height;
