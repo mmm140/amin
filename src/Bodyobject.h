@@ -12,6 +12,7 @@ protected:
     Position position;
     QGraphicsPixmapItem *image{nullptr};
 public:
+    Bodyobject();
     Bodyobject(int width, int height, Position position);
     virtual void draw(QGraphicsScene *scene) = 0;
 };

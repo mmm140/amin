@@ -5,7 +5,7 @@ class Position {
 public:
     int x;
     int y;
-    Position(int x, int y);
+    Position(int x = 0, int y = 0);
 };
 
 #endif //AMIN_POSITION_H
