@@ -1,14 +1,10 @@
-//
-// Created by malekan on 7/7/24.
-//
-
 #ifndef AMIN_PLATFORM_H
 #define AMIN_PLATFORM_H
 
+#include "Bodyobject.h"
 
-class Platform {
+class Platform : public Bodyobject {
 
 };
-
 
 #endif //AMIN_PLATFORM_H

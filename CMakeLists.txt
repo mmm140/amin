@@ -21,7 +21,12 @@ add_executable(amin main.cpp
         src/Decorator.cpp
         src/Decorator.h
         src/Player.cpp
-        src/Player.h)
+        src/Player.h
+        src/Bodyobject.cpp
+        src/Bodyobject.h
+        src/Position.cpp
+        src/Position.h
+        sources/resources.qrc)
 target_link_libraries(amin
         Qt::Core
         Qt::Gui

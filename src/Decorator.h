@@ -1,14 +1,10 @@
-//
-// Created by malekan on 7/7/24.
-//
-
 #ifndef AMIN_DECORATOR_H
 #define AMIN_DECORATOR_H
 
+#include "Bodyobject.h"
 
-class Decorator {
+class Decorator : public Bodyobject {
 
 };
-
 
 #endif //AMIN_DECORATOR_H
