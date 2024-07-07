@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/images">
+        <file alias="hills">assets/hills.png</file>
+        <file alias="platform">assets/platform.png</file>
+        <file alias="platformST">assets/platformSmallTall.png</file>
+        <file alias="SRunL">assets/spriteRunLeft.png</file>
+        <file alias="SRunR">assets/spriteRunRight.png</file>
+        <file alias="SStandL">assets/spriteStandLeft.png</file>
+        <file alias="SStandR">assets/spriteStandRight.png</file>
+    </qresource>
+</RCC>
