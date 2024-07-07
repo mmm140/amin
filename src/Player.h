@@ -9,7 +9,7 @@
 
 class Player : public Bodyobject {
     Q_OBJECT
-    Q_PROPERTY(qreal height READ Bodyobject::y WRITE Bodyobject::setY)
+    Q_PROPERTY(qreal Height READ (image->y) WRITE (image->setY))
 private:
     int frame{};
     QList<QPixmap *> frames{};

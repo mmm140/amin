@@ -10,6 +10,7 @@ void Player::draw(QGraphicsScene *scene) {
     width = scene->width();
     height = scene->height() / 3;
     position = Position(0, 0);
+    groundY = scene->height();
 
     image = new QGraphicsPixmapItem(nullptr);
 
@@ -29,12 +30,12 @@ void Player::draw(QGraphicsScene *scene) {
     image->setPixmap(*frames.at(0));
     scene->addItem(image);
 
-    heightAnimator = new QPropertyAnimation(this, "height", this);
-//    heightAnimator->setStartValue(position.y);
-//    heightAnimator->setEndValue(position.y);
-//    heightAnimator->setDuration(1000);
-//    heightAnimator->start();
-//    connect(heightAnimator, &QPropertyAnimation::finished, this, &Player::handleGravity);
+    heightAnimator = new QPropertyAnimation(this, "Height", this);
+    heightAnimator->setStartValue(position.y);
+    heightAnimator->setEndValue(position.y);
+    heightAnimator->setDuration(2000);
+    heightAnimator->start();
+    connect(heightAnimator, &QPropertyAnimation::finished, this, &Player::handleGravity);
 
     image->setPos(position.x, position.y);
 }
@@ -51,9 +52,9 @@ void Player::standRightAnimate() {
 }
 
 void Player::handleGravity() {
-//    heightAnimator->stop();
-//    heightAnimator->setStartValue(Bodyobject::y());
-//    heightAnimator->setEndValue(groundY);
-//    heightAnimator->setDuration(1000);
-//    heightAnimator->start();
+    heightAnimator->stop();
+    heightAnimator->setStartValue(image->y());
+    heightAnimator->setEndValue(groundY);
+    heightAnimator->setDuration(1000);
+    heightAnimator->start();
 }
