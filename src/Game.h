@@ -14,9 +14,9 @@ private:
     QGraphicsScene *scene;
     std::vector<Platform> platforms;
     std::vector<Decorator> decoration;
-    Player player;
     int amountDistance;
 public:
+    Player player;
     Game();
     ~Game();
     void handleGameOver();

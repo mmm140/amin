@@ -12,11 +12,14 @@ class Player : public Bodyobject {
     Q_PROPERTY(qreal Height READ (image->y) WRITE (image->setY))
 private:
     int frame{};
-    QList<QPixmap *> frames{};
+    QList<QPixmap *> standRightFrames{};
+    QList<QPixmap *> standLeftFrames{};
+    QList<QPixmap *> runRightFrames{};
+    QList<QPixmap *> runLeftFrames{};
     QTimer *standTimer{};
     QTimer *runTimer{};
     QPropertyAnimation *heightAnimator{};
-    int groundY{};
+    int sceneHeight;
     int speed;
     Position velocity;
 public:
@@ -27,7 +30,8 @@ public:
     void handleLeftMovement();
     void handleUpMovement();
     void handleDownMovement();
-    void handleMovement();
+    void handleMovement(QKeyEvent *keyEvent);
+    bool eventFilter(QObject *watched, QEvent *event);
 public slots:
     void standRightAnimate();
     void handleGravity();
