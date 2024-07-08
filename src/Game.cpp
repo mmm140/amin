@@ -22,11 +22,11 @@ Game::Game() {
     connect(player, &Player::gameVictory, this, &Game::handleVictory);
 
     auto platform = new Platform(scene);
-    platform->position = Position(0,scene->height() - platform->height);
+    platform->position = Position(-300,scene->height() - platform->height);
     platform->draw(scene);
 
     auto platform2 = new Platform(scene);
-    platform2->position = Position(800,scene->height() - platform->height);
+    platform2->position = Position(900,scene->height() - platform->height);
     platform2->draw(scene);
 }
 

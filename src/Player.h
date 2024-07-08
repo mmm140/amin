@@ -36,11 +36,13 @@ private:
     bool rightRunEnable{true};
     bool collideRightEnable{true};
     bool collideLeftEnable{true};
+    bool collideUpEnable{false};
     void checkGameOver();
     void collideGround();
     void collideLeftScreen();
     void collideUpScreen();
     void collideMidScreen();
+    void fallInHole();
 //    Position velocity;
 public:
     ~Player() override;

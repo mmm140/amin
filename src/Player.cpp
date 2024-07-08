@@ -62,7 +62,7 @@ void Player::draw(QGraphicsScene *scene) {
     setPixmap(*standRightFrames.at(0));
     scene->addItem(this);
 
-    speed = width / 4;
+    speed = width;
 
     heightAnimator = new QPropertyAnimation(this, "Height", this);
     heightAnimator->setStartValue(position.y);
@@ -120,10 +120,12 @@ void Player::animate() {
     collideUpScreen();
     if (collideRightEnable)
         collideMidScreen();
+    fallInHole();
 }
 
 void Player::handleGravity() {
     collideGroundEnable = true;
+    collideUpEnable = false;
     heightAnimator->stop();
     heightAnimator->setStartValue(y());
     heightAnimator->setEndValue(scene()->height());
@@ -134,6 +136,7 @@ void Player::handleGravity() {
 }
 
 void Player::handleUpMovement() {
+    collideUpEnable = true;
     heightAnimator->stop();
     heightAnimator->setStartValue(y());
     heightAnimator->setEndValue(y() - height);
@@ -170,7 +173,7 @@ void Player::handleMovement(QKeyEvent *keyEvent) {
                     frame = 0;
                 }
                 runTimer->stop();
-                runTimer->setInterval(200);
+                runTimer->setInterval(500);
                 runTimer->start();
             }
             break;
@@ -182,7 +185,8 @@ void Player::handleMovement(QKeyEvent *keyEvent) {
             }
             break;
         case Qt::Key::Key_Down:
-            handleDownMovement();
+            if (collideUpEnable)
+                handleDownMovement();
             collideGroundEnable = true;
             break;
     }
@@ -197,11 +201,11 @@ void Player::handleRightMovement() {
     widthAnimator->stop();
     widthAnimator->setStartValue(x());
     widthAnimator->setEndValue(x() + speed);
-    widthAnimator->setDuration(200);
+    widthAnimator->setDuration(500);
     widthAnimator->start();
 
     runTimer->stop();
-    runTimer->setInterval(200);
+    runTimer->setInterval(500);
     runTimer->start();
 }
 
@@ -214,7 +218,7 @@ void Player::handleLeftMovement() {
     widthAnimator->stop();
     widthAnimator->setStartValue(x());
     widthAnimator->setEndValue(x() - speed);
-    widthAnimator->setDuration(200);
+    widthAnimator->setDuration(500);
     widthAnimator->start();
 }
 
@@ -227,6 +231,7 @@ void Player::stopRunAnimate() {
 }
 
 void Player::handleDownMovement() {
+    collideUpEnable = false;
     heightAnimator->stop();
     heightAnimator->setStartValue(y());
     heightAnimator->setEndValue(scene()->height());
@@ -248,6 +253,7 @@ void Player::collideGround() {
             heightAnimator->setDuration(100);
             heightAnimator->setEasingCurve(QEasingCurve::OutQuad);
             heightAnimator->start();
+            jumpEnable = true;
             break;
         }
     }
@@ -278,7 +284,7 @@ void Player::collideUpScreen() {
         heightAnimator->stop();
         heightAnimator->setStartValue(y());
         heightAnimator->setEndValue(0);
-        heightAnimator->setDuration(100);
+        heightAnimator->setDuration(50);
         heightAnimator->setEasingCurve(QEasingCurve::OutQuad);
         heightAnimator->start();
         jumpEnable = false;
@@ -295,4 +301,9 @@ void Player::collideMidScreen() {
 
 void Player::stopRunTimer() {
     runTimer->stop();
+}
+
+void Player::fallInHole() {
+    if (y() > scene()->height() * 6.0 / 7 - height + 2)
+        jumpEnable = false;
 }
