@@ -9,7 +9,6 @@ class Decorator : public Bodyobject {
 	Q_PROPERTY(qreal Width READ x WRITE setX)
 	QPropertyAnimation *widthAnimator{};
 	int speed;
-	int lastx;
 	public:
     Decorator(QGraphicsScene *scene, int speed);
     void draw(QGraphicsScene *scene) override;

@@ -10,7 +10,6 @@ class Platform : public Bodyobject {
 	Q_PROPERTY(qreal Width READ x WRITE setX)
 	QPropertyAnimation *widthAnimator{};
 	int speed;
-	int lastx;
 public:
     Platform(QGraphicsScene *scene, int speed);
     ~Platform();

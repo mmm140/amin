@@ -9,7 +9,6 @@ void Platform::draw(QGraphicsScene *scene) {
     scene->addItem(this);
 
     setPos(position.x, position.y);
-    lastx=position.x;
     widthAnimator = new QPropertyAnimation(this, "Width", this);
 }
 
@@ -26,7 +25,6 @@ Platform::~Platform() {
 void Platform::handle_leftMovement()
 {
     widthAnimator->stop();
-    lastx=x();
     widthAnimator->setStartValue(x());
     widthAnimator->setEndValue(x()-speed);
     widthAnimator->setDuration(500);

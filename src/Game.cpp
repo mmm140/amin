@@ -50,6 +50,14 @@ Game::Game() {
     platform2->draw(scene);
     platforms.push_back(platform2);
 
+    auto platform3 = new Platform(scene, speed);
+    connect(player, &Player::BGMovement, platform3, &Platform::handle_leftMovement);
+    connect(player, &Player::BGStop, platform3, &Platform::stopMovement);
+    platform3->position = Position(1700,scene->height() - platform->height);
+    platform3->setZValue(3);
+    platform3->draw(scene);
+    platforms.push_back(platform3);
+
     amountDistance = 4000;
     currentDistance = 0;
     connect(player, &Player::BGMovement, this, &Game::handleBackGroundMovement);
@@ -114,10 +122,11 @@ void Game::handleBackGroundMovement()
     if(time(0)>=t)
     {
         srand(time(0));
+
         auto hill = new Decorator(scene, speed);
         connect(player, &Player::BGMovement, hill, &Decorator::handle_leftMovement);
         connect(player, &Player::BGStop, hill, &Decorator::stopMovement);
-        hill->position = Position(lastx+(rand%((int)scene->width/2),scene->height() * (3.0 / 8.0));
+        hill->position = Position(scene->width() + (rand() % (int) scene->width()),scene->height() * (3.0 / 8.0));
         hill->setZValue(1);
         hill->draw(scene);
         decoration.push_back(hill);
@@ -129,15 +138,8 @@ void Game::handleBackGroundMovement()
         platform->setZValue(3);
         platform->draw(scene);
         platforms.push_back(platform);
-        t = time(0) + 2;
 
-        auto platform = new Platform(scene, speed);
-        connect(player, &Player::BGMovement, platform, &Platform::handle_leftMovement);
-        connect(player, &Player::BGStop, platform, &Platform::stopMovement);
-        platform->position = Position(scene->width() + (rand() % (int) (scene->width()))/2,scene->height() - platform->height);
-        platform->setZValue(3);
-        platform->draw(scene);
-        platforms.push_back(platform);
+        t = time(0) + 2;
     }
 }
 
