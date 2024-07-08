@@ -121,6 +121,14 @@ void Game::handleBackGroundMovement()
         hill->setZValue(1);
         hill->draw(scene);
         decoration.push_back(hill);
+
+        auto platform = new Platform(scene, speed);
+        connect(player, &Player::BGMovement, platform, &Platform::handle_leftMovement);
+        connect(player, &Player::BGStop, platform, &Platform::stopMovement);
+        platform->position = Position(scene->width() + (rand() % (int) (scene->width() / 2)),scene->height() - platform->height);
+        platform->setZValue(3);
+        platform->draw(scene);
+        platforms.push_back(platform);
         t = time(0) + 2;
     }
 }
