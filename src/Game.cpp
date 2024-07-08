@@ -3,7 +3,7 @@
 #include <QApplication>
 #include "Platform.h"
 #include <QPainter>
-
+#include "Decorator.h"
 
 Game::Game() {
     view = new QGraphicsView();
@@ -22,7 +22,9 @@ Game::Game() {
 
     player = new Player(this, speed);
 
-    auto hill = new Decorator(scene);
+    auto hill = new Decorator(scene,player->speed);
+    connect(player, &Player::BGMovement, hill, &Decorator::handle_leftMovement);
+    connect(player, &Player::BGStop, hill, &Decorator::stopMovement);
     hill->position = Position(0,0);
     hill->draw(scene);
     decoration.push_back(hill);
@@ -47,6 +49,7 @@ Game::Game() {
 
     amountDistance = 4000;
     currentDistance = 0;
+    connect(player, &Player::BGMovement, this, &Game::hadleBackGroundMovement);
 }
 
 Game::~Game() {
@@ -100,4 +103,13 @@ void Game::closeGameFunction() {
     delete textItem;
     delete closeGame;
     QApplication::exit(0);
+}
+
+void Game::hadleBackGroundMovement()
+{
+    srand(time(0);
+    rand()%scene->width;
+    auto hill = new Decorator(scene,player->speed);
+    connect(player, &Player::BGMovement, hill, &Decorator::handle_leftMovement);
+    connect(player, &Player::BGStop, hill, &Decorator::stopMovement);
 }

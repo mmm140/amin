@@ -27,6 +27,7 @@ public slots:
     void handleGameOver();
     void handleVictory();
     void closeGameFunction();
+	void hadleBackGroundMovement();
 };
 
 #endif //AMIN_GAME_H
