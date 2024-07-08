@@ -260,8 +260,11 @@ void Player::collideGround() {
 }
 
 void Player::checkGameOver() {
-    if (y() >= scene()->height())
+    static bool flag = true;
+    if (y() >= scene()->height() && flag) {
+        flag = false;
         emit gameOver();
+    }
 }
 
 void Player::collideLeftScreen() {

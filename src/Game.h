@@ -15,6 +15,8 @@ private:
     QGraphicsScene *scene;
     std::vector<Platform> platforms;
     std::vector<Decorator> decoration;
+    QGraphicsTextItem *gameOverText;
+    QTimer *closeGame{};
     int amountDistance;
 public:
     Player *player;
@@ -23,6 +25,7 @@ public:
 public slots:
     void handleGameOver();
     void handleVictory();
+    void closeGameFunction();
 };
 
 #endif //AMIN_GAME_H
