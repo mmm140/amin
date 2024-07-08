@@ -24,6 +24,12 @@ Platform::~Platform() {
 
 void Platform::handle_leftMovement()
 {
+    if(x() < -width && flag)
+    {
+        scene()->removeItem(this);
+        flag = false;
+        return;
+    }
     widthAnimator->stop();
     widthAnimator->setStartValue(x());
     widthAnimator->setEndValue(x()-speed);

@@ -14,6 +14,7 @@ public:
     Platform(QGraphicsScene *scene, int speed);
     ~Platform();
     void draw(QGraphicsScene *scene) override;
+    bool flag{true};
 public slots:
 	void handle_leftMovement();
     void stopMovement();

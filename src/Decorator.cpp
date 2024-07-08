@@ -13,6 +13,7 @@ void Decorator::draw(QGraphicsScene *scene) {
 }
 
 Decorator::Decorator(QGraphicsScene *scene, int speed) {
+    flag = true;
 	this->speed=speed;
     width = scene->width();
     height = scene->height() / 2;
@@ -26,10 +27,11 @@ Decorator::~Decorator()
 
 void Decorator::handle_leftMovement()
 {
-	if(x()<-width)
+	if(x() < -width && flag)
 	{
-	scene()->removeItem(this);
-	delete this;
+	    scene()->removeItem(this);
+        flag = false;
+        return;
 	}
 	widthAnimator->stop();
 	widthAnimator->setStartValue(x());

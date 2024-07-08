@@ -9,11 +9,12 @@ class Decorator : public Bodyobject {
 	Q_PROPERTY(qreal Width READ x WRITE setX)
 	QPropertyAnimation *widthAnimator{};
 	int speed;
-	public:
+public:
     Decorator(QGraphicsScene *scene, int speed);
     void draw(QGraphicsScene *scene) override;
 	~Decorator();
-	public slots:
+    bool flag{true};
+public slots:
 	void handle_leftMovement();
 	void stopMovement();
 };

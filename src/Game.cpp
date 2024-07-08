@@ -58,6 +58,14 @@ Game::Game() {
     platform3->draw(scene);
     platforms.push_back(platform3);
 
+    auto platform4 = new Platform(scene, speed);
+    connect(player, &Player::BGMovement, platform4, &Platform::handle_leftMovement);
+    connect(player, &Player::BGStop, platform4, &Platform::stopMovement);
+    platform4->position = Position(2300,scene->height() - platform->height);
+    platform4->setZValue(3);
+    platform4->draw(scene);
+    platforms.push_back(platform4);
+
     amountDistance = 4000;
     currentDistance = 0;
     connect(player, &Player::BGMovement, this, &Game::handleBackGroundMovement);
@@ -123,6 +131,14 @@ void Game::handleBackGroundMovement()
     {
         srand(time(0));
 
+        for (Decorator *decorator: decoration) {
+            if (!decorator->flag){
+                auto d = std::find(decoration.begin(), decoration.end(), decorator);
+                decoration.erase(d);
+                delete decorator;
+            }
+        }
+
         auto hill = new Decorator(scene, speed);
         connect(player, &Player::BGMovement, hill, &Decorator::handle_leftMovement);
         connect(player, &Player::BGStop, hill, &Decorator::stopMovement);
@@ -130,6 +146,14 @@ void Game::handleBackGroundMovement()
         hill->setZValue(1);
         hill->draw(scene);
         decoration.push_back(hill);
+
+        for (Platform *platform: platforms) {
+            if (!platform->flag){
+                auto d = std::find(platforms.begin(), platforms.end(), platform);
+                platforms.erase(d);
+                delete platform;
+            }
+        }
 
         auto platform = new Platform(scene, speed);
         connect(player, &Player::BGMovement, platform, &Platform::handle_leftMovement);
