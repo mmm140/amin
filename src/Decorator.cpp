@@ -9,15 +9,32 @@ void Decorator::draw(QGraphicsScene *scene) {
 	setPixmap(pixmap);
 	scene->addItem(this);
 	setPos(position.x, position.y);
+	widthAnimator = new QPropertyAnimation(this, "Width", this);
 }
 
 Decorator::Decorator(QGraphicsScene *scene) {
+	int speed;
+	this->speed=speed;
     width = scene->width();
     height = scene->height() / 2;
 }
 
-void Decorator::stopRunAnimate() {
+Decorator::~Decorator()
+{
+	delete widthAnimator;
+}
 
+void Decorator::handle_leftMovement()
+{
+	widthAnimator->stop();
+	widthAnimator->setStartValue(x());
+	widthAnimator->setEndValue(x()-speed);
+	widthAnimator->setDuration(500);
+	widthAnimator->start();
+}
+
+void Decorator::stopMovement() {
+	widthAnimator->stop();
 }
 
 
