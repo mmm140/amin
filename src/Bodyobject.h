@@ -7,11 +7,10 @@
 #include "Position.h"
 
 class Bodyobject : public QObject, public QGraphicsPixmapItem {
-protected:
+public:
     int width;
     int height;
     Position position;
-public:
     Bodyobject();
     Bodyobject(int width, int height, Position position);
     virtual void draw(QGraphicsScene *scene) = 0;

@@ -26,12 +26,21 @@ private:
     QList<QPixmap *> runRightFrames{};
     QList<QPixmap *> runLeftFrames{};
     QTimer *SRTimer{};
+    QTimer *runTimer{};
     QPropertyAnimation *heightAnimator{};
     QPropertyAnimation *widthAnimator{};
-    int sceneHeight;
     int speed;
     bool collideGroundEnable{true};
+    bool leftRunEnable{true};
+    bool jumpEnable{true};
+    bool rightRunEnable{true};
+    bool collideRightEnable{true};
+    bool collideLeftEnable{true};
     void checkGameOver();
+    void collideGround();
+    void collideLeftScreen();
+    void collideUpScreen();
+    void collideMidScreen();
 //    Position velocity;
 public:
     ~Player() override;
@@ -46,9 +55,10 @@ public slots:
     void animate();
     void handleGravity();
     void stopRunAnimate();
-    void collideGround();
+    void stopRunTimer();
 signals:
     void gameOver();
+    void gameVictory();
 };
 
 #endif //AMIN_PLAYER_H

@@ -1,16 +1,17 @@
 #include "Platform.h"
 
 void Platform::draw(QGraphicsScene *scene) {
-    width = scene->width();
-    height = scene->height() / 7;
-    position = Position(0, scene->height() - height);
+    QPixmap platform(":/images/platform");
+    platform = platform.scaled(width, height, Qt::KeepAspectRatio);
 
-    QPixmap sprite(":/images/platform");
-    sprite = sprite.scaled(width, height, Qt::KeepAspectRatio);
-
-    width = sprite.width();
-    setPixmap(sprite);
+    width = platform.width();
+    setPixmap(platform);
     scene->addItem(this);
 
     setPos(position.x, position.y);
+}
+
+Platform::Platform(QGraphicsScene *scene) {
+    width = scene->width();
+    height = scene->height() / 7;
 }

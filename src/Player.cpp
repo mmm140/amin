@@ -8,8 +8,10 @@
 void Player::draw(QGraphicsScene *scene) {
     width = scene->width();
     height = scene->height() / 3;
-    position = Position(682, 0);
-    sceneHeight = scene->height();
+    position = Position(0, 0);
+    runTimer = new QTimer(nullptr);
+    connect(runTimer, &QTimer::timeout, this, &Player::stopRunAnimate);
+    connect(runTimer, &QTimer::timeout, this, &Player::stopRunTimer);
 
     {
         QPixmap sprite(":/images/SStandR");
@@ -60,7 +62,7 @@ void Player::draw(QGraphicsScene *scene) {
     setPixmap(*standRightFrames.at(0));
     scene->addItem(this);
 
-    speed = width * 2;
+    speed = width / 4;
 
     heightAnimator = new QPropertyAnimation(this, "Height", this);
     heightAnimator->setStartValue(position.y);
@@ -79,6 +81,7 @@ Player::~Player() {
     delete SRTimer;
     delete heightAnimator;
     delete widthAnimator;
+    delete runTimer;
     qDeleteAll(standRightFrames);
     qDeleteAll(standLeftFrames);
     qDeleteAll(runRightFrames);
@@ -112,16 +115,22 @@ void Player::animate() {
     if (collideGroundEnable)
         collideGround();
     checkGameOver();
+    if (collideLeftEnable)
+        collideLeftScreen();
+    collideUpScreen();
+    if (collideRightEnable)
+        collideMidScreen();
 }
 
 void Player::handleGravity() {
     collideGroundEnable = true;
     heightAnimator->stop();
     heightAnimator->setStartValue(y());
-    heightAnimator->setEndValue(sceneHeight);
+    heightAnimator->setEndValue(scene()->height());
     heightAnimator->setDuration(1500);
     heightAnimator->setEasingCurve(QEasingCurve::InQuad);
     heightAnimator->start();
+    jumpEnable = true;
 }
 
 void Player::handleUpMovement() {
@@ -145,14 +154,32 @@ bool Player::eventFilter(QObject *watched, QEvent *event) {
 void Player::handleMovement(QKeyEvent *keyEvent) {
     switch (keyEvent->key()) {
         case Qt::Key::Key_Up:
-            handleUpMovement();
-            collideGroundEnable = false;
+            if (jumpEnable) {
+                handleUpMovement();
+                collideGroundEnable = false;
+            }
             break;
         case Qt::Key::Key_Right:
-            handleRightMovement();
+            if (rightRunEnable) {
+                handleRightMovement();
+                collideRightEnable = true;
+                collideLeftEnable = false;
+            } else {
+                if (state != runRight) {
+                    state = runRight;
+                    frame = 0;
+                }
+                runTimer->stop();
+                runTimer->setInterval(200);
+                runTimer->start();
+            }
             break;
         case Qt::Key::Key_Left:
-            handleLeftMovement();
+            if (leftRunEnable) {
+                handleLeftMovement();
+                collideRightEnable = false;
+                collideLeftEnable = true;
+            }
             break;
         case Qt::Key::Key_Down:
             handleDownMovement();
@@ -162,20 +189,32 @@ void Player::handleMovement(QKeyEvent *keyEvent) {
 }
 
 void Player::handleRightMovement() {
-    state = runRight;
+    leftRunEnable = true;
+    if (state != runRight) {
+        state = runRight;
+        frame = 0;
+    }
     widthAnimator->stop();
     widthAnimator->setStartValue(x());
     widthAnimator->setEndValue(x() + speed);
-    widthAnimator->setDuration(700);
+    widthAnimator->setDuration(200);
     widthAnimator->start();
+
+    runTimer->stop();
+    runTimer->setInterval(200);
+    runTimer->start();
 }
 
 void Player::handleLeftMovement() {
-    state = runLeft;
+    rightRunEnable = true;
+    if (state != runLeft) {
+        state = runLeft;
+        frame = 0;
+    }
     widthAnimator->stop();
     widthAnimator->setStartValue(x());
     widthAnimator->setEndValue(x() - speed);
-    widthAnimator->setDuration(700);
+    widthAnimator->setDuration(200);
     widthAnimator->start();
 }
 
@@ -184,15 +223,17 @@ void Player::stopRunAnimate() {
         state = standRight;
     else if (state == runLeft)
         state = standLeft;
+    frame = 0;
 }
 
 void Player::handleDownMovement() {
     heightAnimator->stop();
     heightAnimator->setStartValue(y());
-    heightAnimator->setEndValue(sceneHeight);
+    heightAnimator->setEndValue(scene()->height());
     heightAnimator->setDuration(500);
     heightAnimator->setEasingCurve(QEasingCurve::InQuad);
     heightAnimator->start();
+    jumpEnable = true;
 }
 
 void Player::collideGround() {
@@ -215,4 +256,43 @@ void Player::collideGround() {
 void Player::checkGameOver() {
     if (y() >= scene()->height())
         emit gameOver();
+}
+
+void Player::collideLeftScreen() {
+    if (x() <= 0)
+    {
+        stopRunAnimate();
+        widthAnimator->stop();
+        widthAnimator->setStartValue(x());
+        widthAnimator->setEndValue(0);
+        widthAnimator->setDuration(100);
+        widthAnimator->setEasingCurve(QEasingCurve::OutQuad);
+        widthAnimator->start();
+        leftRunEnable = false;
+    }
+}
+
+void Player::collideUpScreen() {
+    if (y() <= 0 && jumpEnable)
+    {
+        heightAnimator->stop();
+        heightAnimator->setStartValue(y());
+        heightAnimator->setEndValue(0);
+        heightAnimator->setDuration(100);
+        heightAnimator->setEasingCurve(QEasingCurve::OutQuad);
+        heightAnimator->start();
+        jumpEnable = false;
+    }
+}
+
+void Player::collideMidScreen() {
+    if (x() >= scene()->width() * 2.0 / 5.0)
+    {
+        widthAnimator->stop();
+        rightRunEnable = false;
+    }
+}
+
+void Player::stopRunTimer() {
+    runTimer->stop();
 }

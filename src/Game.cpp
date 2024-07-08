@@ -19,9 +19,15 @@ Game::Game() {
     player = new Player();
     player->draw(scene);
     connect(player, &Player::gameOver, this, &Game::handleGameOver);
+    connect(player, &Player::gameVictory, this, &Game::handleVictory);
 
-    auto platform = new Platform();
+    auto platform = new Platform(scene);
+    platform->position = Position(0,scene->height() - platform->height);
     platform->draw(scene);
+
+    auto platform2 = new Platform(scene);
+    platform2->position = Position(800,scene->height() - platform->height);
+    platform2->draw(scene);
 }
 
 Game::~Game() {

@@ -5,6 +5,7 @@
 
 class Platform : public Bodyobject {
 public:
+    Platform(QGraphicsScene *scene);
     void draw(QGraphicsScene *scene) override;
 };
 
