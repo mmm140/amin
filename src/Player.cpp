@@ -3,11 +3,12 @@
 #include <QGraphicsItem>
 #include <QApplication>
 #include "Platform.h"
+#include "Game.h"
 
 void Player::draw(QGraphicsScene *scene) {
     width = scene->width();
     height = scene->height() / 3;
-    position = Position(0, 0);
+    position = Position(682, 0);
     sceneHeight = scene->height();
 
     {
@@ -110,18 +111,17 @@ void Player::animate() {
 
     if (collideGroundEnable)
         collideGround();
+    checkGameOver();
 }
 
 void Player::handleGravity() {
-    if (GravityEnable) {
-        collideGroundEnable = true;
-        heightAnimator->stop();
-        heightAnimator->setStartValue(y());
-        heightAnimator->setEndValue(sceneHeight);
-        heightAnimator->setDuration(1500);
-        heightAnimator->setEasingCurve(QEasingCurve::InQuad);
-        heightAnimator->start();
-    }
+    collideGroundEnable = true;
+    heightAnimator->stop();
+    heightAnimator->setStartValue(y());
+    heightAnimator->setEndValue(sceneHeight);
+    heightAnimator->setDuration(1500);
+    heightAnimator->setEasingCurve(QEasingCurve::InQuad);
+    heightAnimator->start();
 }
 
 void Player::handleUpMovement() {
@@ -143,8 +143,6 @@ bool Player::eventFilter(QObject *watched, QEvent *event) {
 }
 
 void Player::handleMovement(QKeyEvent *keyEvent) {
-    GravityEnable = true;
-
     switch (keyEvent->key()) {
         case Qt::Key::Key_Up:
             handleUpMovement();
@@ -201,7 +199,7 @@ void Player::collideGround() {
     for (QGraphicsItem *Item : collidingItems())
     {
         Platform *platform = dynamic_cast<Platform *>(Item);
-        if (platform)
+        if (platform && platform->y() >= (y() + height - 85))
         {
             heightAnimator->stop();
             heightAnimator->setStartValue(y());
@@ -209,8 +207,12 @@ void Player::collideGround() {
             heightAnimator->setDuration(100);
             heightAnimator->setEasingCurve(QEasingCurve::OutQuad);
             heightAnimator->start();
-            GravityEnable = false;
             break;
         }
     }
+}
+
+void Player::checkGameOver() {
+    if (y() >= scene()->height())
+        emit gameOver();
 }

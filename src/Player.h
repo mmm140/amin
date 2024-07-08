@@ -31,7 +31,7 @@ private:
     int sceneHeight;
     int speed;
     bool collideGroundEnable{true};
-    bool GravityEnable{true};
+    void checkGameOver();
 //    Position velocity;
 public:
     ~Player() override;
@@ -47,6 +47,8 @@ public slots:
     void handleGravity();
     void stopRunAnimate();
     void collideGround();
+signals:
+    void gameOver();
 };
 
 #endif //AMIN_PLAYER_H

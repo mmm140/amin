@@ -8,7 +8,8 @@
 #include "Decorator.h"
 #include "Player.h"
 
-class Game {
+class Game : public QObject {
+    Q_OBJECT
 private:
     QGraphicsView *view;
     QGraphicsScene *scene;
@@ -19,9 +20,9 @@ public:
     Player *player;
     Game();
     ~Game();
+public slots:
     void handleGameOver();
     void handleVictory();
-
 };
 
 #endif //AMIN_GAME_H

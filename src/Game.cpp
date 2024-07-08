@@ -18,6 +18,7 @@ Game::Game() {
 
     player = new Player();
     player->draw(scene);
+    connect(player, &Player::gameOver, this, &Game::handleGameOver);
 
     auto platform = new Platform();
     platform->draw(scene);
@@ -26,4 +27,12 @@ Game::Game() {
 Game::~Game() {
     delete view;
     delete scene;
+}
+
+void Game::handleGameOver() {
+    exit(0);
+}
+
+void Game::handleVictory() {
+
 }
