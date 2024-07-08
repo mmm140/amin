@@ -107,20 +107,16 @@ void Game::closeGameFunction() {
 
 void Game::handleBackGroundMovement()
 {
-    static int t=time(0)+2;
-
+    static int t = time(0) + 2;
     if(time(0)>=t)
     {
-    srand(time(0));
-    rand() % ((int) scene->width());
-
-    auto hill = new Decorator(scene, speed);
-    connect(player, &Player::BGMovement, hill, &Decorator::handle_leftMovement);
-    connect(player, &Player::BGStop, hill, &Decorator::stopMovement);
-    hill->position = Position(Decoration.end()[0]+rand() % ((int) scene->width()),0);
-    hill->draw(scene);
-    decoration.push_back(hill);
-    t=time(0)+2;
+        srand(time(0));
+        auto hill = new Decorator(scene, speed);
+        connect(player, &Player::BGMovement, hill, &Decorator::handle_leftMovement);
+        connect(player, &Player::BGStop, hill, &Decorator::stopMovement);
+        hill->position = Position(scene->width() + (rand() % (int) (scene->width() * 2)),0);
+        hill->draw(scene);
+        decoration.push_back(hill);
+        t = time(0) + 2;
     }
-
 }

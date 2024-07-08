@@ -10,7 +10,7 @@ class Decorator : public Bodyobject {
 	QPropertyAnimation *widthAnimator{};
 	int speed;
 	public:
-    Decorator(QGraphicsScene *scene,int speed);
+    Decorator(QGraphicsScene *scene, int speed);
     void draw(QGraphicsScene *scene) override;
 	~Decorator();
 	public slots:
