@@ -109,7 +109,11 @@ void Game::handleBackGroundMovement()
 {
     srand(time(0));
     rand() % ((int) scene->width());
+
     auto hill = new Decorator(scene, speed);
     connect(player, &Player::BGMovement, hill, &Decorator::handle_leftMovement);
     connect(player, &Player::BGStop, hill, &Decorator::stopMovement);
+    hill->position = Position(0,0);
+    hill->draw(scene);
+    decoration.push_back(hill);
 }
