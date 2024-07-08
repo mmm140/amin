@@ -314,7 +314,7 @@ void Player::fallInHole() {
 
 void Player::checkVictory() {
     static bool flag = true;
-    if (game->currentDistance >= game->amountDistance && flag) {
+    if ((- game->reference->x()) >= game->amountDistance && flag) {
         flag = false;
         emit gameVictory();
     }

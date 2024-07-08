@@ -37,15 +37,16 @@ Game::Game() {
     auto platform = new Platform(scene, speed);
     connect(player, &Player::BGMovement, platform, &Platform::handle_leftMovement);
     connect(player, &Player::BGStop, platform, &Platform::stopMovement);
-    platform->position = Position(-300,scene->height() - platform->height);
+    platform->position = Position(0,scene->height() - platform->height);
     platform->setZValue(3);
+    platform->flag = false;
     platform->draw(scene);
-    platforms.push_back(platform);
+    reference = platform;
 
     auto platform2 = new Platform(scene, speed);
     connect(player, &Player::BGMovement, platform2, &Platform::handle_leftMovement);
     connect(player, &Player::BGStop, platform2, &Platform::stopMovement);
-    platform2->position = Position(900,scene->height() - platform->height);
+    platform2->position = Position(1200,scene->height() - platform->height);
     platform2->setZValue(3);
     platform2->draw(scene);
     platforms.push_back(platform2);
@@ -53,7 +54,7 @@ Game::Game() {
     auto platform3 = new Platform(scene, speed);
     connect(player, &Player::BGMovement, platform3, &Platform::handle_leftMovement);
     connect(player, &Player::BGStop, platform3, &Platform::stopMovement);
-    platform3->position = Position(1700,scene->height() - platform->height);
+    platform3->position = Position(2100,scene->height() - platform->height);
     platform3->setZValue(3);
     platform3->draw(scene);
     platforms.push_back(platform3);
@@ -61,13 +62,12 @@ Game::Game() {
     auto platform4 = new Platform(scene, speed);
     connect(player, &Player::BGMovement, platform4, &Platform::handle_leftMovement);
     connect(player, &Player::BGStop, platform4, &Platform::stopMovement);
-    platform4->position = Position(2300,scene->height() - platform->height);
+    platform4->position = Position(2800,scene->height() - platform->height);
     platform4->setZValue(3);
     platform4->draw(scene);
     platforms.push_back(platform4);
 
     amountDistance = 4000;
-    currentDistance = 0;
     connect(player, &Player::BGMovement, this, &Game::handleBackGroundMovement);
 }
 
@@ -82,13 +82,14 @@ void Game::handleGameOver() {
     int width = 500;
     int height = 250;
     QRect rect((scene->width() - width) / 2, (scene->height() - height) / 2, width, height);
-    scene->addRect(rect, QPen(QBrush("gray"), 3), QBrush("#21393F"));
+    scene->addRect(rect, QPen(QBrush("gray"), 3), QBrush("#21393F"))->setZValue(4);
 
     textItem = new QGraphicsTextItem;
     textItem->setPlainText("GameOver");
     textItem->setFont(QFont(nullptr, 50));
     textItem->setPos(rect.x() + rect.width() / 7,rect.y() + rect.height() / 7);
     textItem->setDefaultTextColor(QColor("#D62020"));
+    textItem->setZValue(5);
     scene->addItem(textItem);
 
     closeGame = new QTimer;
@@ -101,13 +102,14 @@ void Game::handleVictory() {
     int width = 500;
     int height = 250;
     QRect rect((scene->width() - width) / 2, (scene->height() - height) / 2, width, height);
-    scene->addRect(rect, QPen(QBrush("gray"), 3), QBrush("#21393F"));
+    scene->addRect(rect, QPen(QBrush("gray"), 3), QBrush("#21393F"))->setZValue(4);
 
     textItem = new QGraphicsTextItem;
     textItem->setPlainText("Victory");
     textItem->setFont(QFont(nullptr, 50));
     textItem->setPos(rect.x() + rect.width() / 7,rect.y() + rect.height() / 7);
     textItem->setDefaultTextColor(QColor("#43D620"));
+    textItem->setZValue(5);
     scene->addItem(textItem);
 
     closeGame = new QTimer;

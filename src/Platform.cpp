@@ -13,6 +13,7 @@ void Platform::draw(QGraphicsScene *scene) {
 }
 
 Platform::Platform(QGraphicsScene *scene, int speed) {
+    flag = true;
     this->speed = speed;
     width = scene->width();
     height = scene->height() / 7;

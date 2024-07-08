@@ -23,7 +23,7 @@ public:
     Game();
     ~Game() override;
     int amountDistance;
-    int currentDistance;
+    Platform *reference{};
 public slots:
     void handleGameOver();
     void handleVictory();
