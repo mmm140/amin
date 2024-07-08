@@ -26,11 +26,17 @@ Decorator::~Decorator()
 
 void Decorator::handle_leftMovement()
 {
+	if(x()<-width)
+	{
+	scene()->removeItem(this);
+	delete this;
+	}
 	widthAnimator->stop();
 	widthAnimator->setStartValue(x());
 	widthAnimator->setEndValue(x()-speed);
 	widthAnimator->setDuration(500);
 	widthAnimator->start();
+
 }
 
 void Decorator::stopMovement() {
