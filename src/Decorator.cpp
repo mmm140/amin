@@ -16,4 +16,8 @@ Decorator::Decorator(QGraphicsScene *scene) {
     height = scene->height() / 2;
 }
 
+void Decorator::stopRunAnimate() {
+
+}
+
 

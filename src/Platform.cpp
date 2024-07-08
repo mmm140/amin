@@ -12,7 +12,8 @@ void Platform::draw(QGraphicsScene *scene) {
     widthAnimator = new QPropertyAnimation(this, "Width", this);
 }
 
-Platform::Platform(QGraphicsScene *scene) {
+Platform::Platform(QGraphicsScene *scene, int speed) {
+    this->speed = speed;
     width = scene->width();
     height = scene->height() / 7;
 }
@@ -21,11 +22,15 @@ Platform::~Platform() {
     delete widthAnimator;
 }
 
-Platform::handle_leftMovement()
+void Platform::handle_leftMovement()
 {
-    widthAnimator->stop;
+    widthAnimator->stop();
     widthAnimator->setStartValue(x());
     widthAnimator->setEndValue(x()-speed);
     widthAnimator->setDuration(500);
-    widthAnimator->start;
+    widthAnimator->start();
+}
+
+void Platform::stopRunAnimate() {
+
 }

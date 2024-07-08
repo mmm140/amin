@@ -18,22 +18,27 @@ Game::Game() {
     scene->setSceneRect(0, 0, view->width(), view->height());
     scene->setBackgroundBrush(QBrush("#124552"));
 
+    int speed = scene->width() / 10;
+
+    player = new Player(this, speed);
+
     auto hill = new Decorator(scene);
     hill->position = Position(0,0);
     hill->draw(scene);
     decoration.push_back(hill);
 
-    auto platform = new Platform(scene);
+    auto platform = new Platform(scene, speed);
+    connect(player, &Player::BGMovement, platform, &Platform::handle_leftMovement);
     platform->position = Position(-300,scene->height() - platform->height);
     platform->draw(scene);
     platforms.push_back(platform);
 
-    auto platform2 = new Platform(scene);
+    auto platform2 = new Platform(scene, speed);
+    connect(player, &Player::BGMovement, platform2, &Platform::handle_leftMovement);
     platform2->position = Position(900,scene->height() - platform->height);
     platform2->draw(scene);
     platforms.push_back(platform2);
 
-    player = new Player(this);
     player->draw(scene);
     connect(player, &Player::gameOver, this, &Game::handleGameOver);
     connect(player, &Player::gameVictory, this, &Game::handleVictory);

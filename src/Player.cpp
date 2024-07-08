@@ -62,8 +62,6 @@ void Player::draw(QGraphicsScene *scene) {
     setPixmap(*standRightFrames.at(0));
     scene->addItem(this);
 
-    speed = width;
-
     heightAnimator = new QPropertyAnimation(this, "Height", this);
     heightAnimator->setStartValue(position.y);
     heightAnimator->setEndValue(position.y);
@@ -176,6 +174,7 @@ void Player::handleMovement(QKeyEvent *keyEvent) {
                 runTimer->stop();
                 runTimer->setInterval(500);
                 runTimer->start();
+                emit BGMovement();
             }
             break;
         case Qt::Key::Key_Left:
@@ -320,6 +319,7 @@ void Player::checkVictory() {
     }
 }
 
-Player::Player(Game *game) {
+Player::Player(Game *game, int speed) {
+    this->speed = speed;
     this->game = game;
 }

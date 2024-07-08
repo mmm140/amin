@@ -49,7 +49,7 @@ private:
     void checkVictory();
 //    Position velocity;
 public:
-    explicit Player(Game *game);
+    explicit Player(Game *game, int speed);
     ~Player() override;
     void draw(QGraphicsScene *scene) override;
     void handleRightMovement();
@@ -66,6 +66,7 @@ public slots:
 signals:
     void gameOver();
     void gameVictory();
+    void BGMovement();
 };
 
 #endif //AMIN_PLAYER_H

@@ -11,15 +11,12 @@ class Platform : public Bodyobject {
 	QPropertyAnimation *widthAnimator{};
 	int speed;
 public:
-    Platform(QGraphicsScene *scene);
+    Platform(QGraphicsScene *scene, int speed);
+    ~Platform();
     void draw(QGraphicsScene *scene) override;
 public slots:
-	handle_leftMovement();
+	void handle_leftMovement();
     void stopRunAnimate();
 };
-
-Platform::~Platform();
-
-
 
 #endif //AMIN_PLATFORM_H
