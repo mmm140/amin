@@ -16,46 +16,53 @@ void Player::draw(QGraphicsScene *scene) {
     sceneHeight = scene->height();
 
     image = new QGraphicsPixmapItem(nullptr);
-//    image->setFlags(QGraphicsItem::ItemIsFocusable);
-//    image->setFocus();
 
-    for (int i = 0; i < 60; ++i) {
+    {
         QPixmap sprite(":/images/SStandR");
         sprite = sprite.scaled(width, height, Qt::KeepAspectRatioByExpanding);
-        auto *frm = new QPixmap;
-        *frm = sprite.copy(i * sprite.width() / 60, 0, sprite.width() / 60, sprite.height());
-        standRightFrames.append(frm);
+        for (int i = 0; i < 60; ++i) {
+            auto *frm = new QPixmap;
+            *frm = sprite.copy(i * sprite.width() / 60, 0, sprite.width() / 60, sprite.height());
+            standRightFrames.append(frm);
+        }
     }
 
-    for (int i = 0; i < 60; ++i) {
+    {
         QPixmap sprite(":/images/SStandL");
         sprite = sprite.scaled(width, height, Qt::KeepAspectRatioByExpanding);
-        auto *frm = new QPixmap;
-        *frm = sprite.copy(i * sprite.width() / 60, 0, sprite.width() / 60, sprite.height());
-        standLeftFrames.append(frm);
+        for (int i = 0; i < 60; ++i) {
+            auto *frm = new QPixmap;
+            *frm = sprite.copy(i * sprite.width() / 60, 0, sprite.width() / 60, sprite.height());
+            standLeftFrames.append(frm);
+        }
     }
 
-    for (int i = 0; i < 30; ++i) {
+    {
         QPixmap sprite(":/images/SRunR");
         sprite = sprite.scaled(width, height, Qt::KeepAspectRatioByExpanding);
-        auto *frm = new QPixmap;
-        *frm = sprite.copy(i * sprite.width() / 30, 0, sprite.width() / 30, sprite.height());
-        runRightFrames.append(frm);
+        for (int i = 0; i < 30; ++i) {
+            auto *frm = new QPixmap;
+            *frm = sprite.copy(i * sprite.width() / 30, 0, sprite.width() / 30, sprite.height());
+            runRightFrames.append(frm);
+        }
     }
 
-    for (int i = 0; i < 30; ++i) {
+    {
         QPixmap sprite(":/images/SRunL");
         sprite = sprite.scaled(width, height, Qt::KeepAspectRatioByExpanding);
-        auto *frm = new QPixmap;
-        *frm = sprite.copy(i * sprite.width() / 30, 0, sprite.width() / 30, sprite.height());
-        runLeftFrames.append(frm);
+        for (int i = 0; i < 30; ++i) {
+            auto *frm = new QPixmap;
+            *frm = sprite.copy(i * sprite.width() / 30, 0, sprite.width() / 30, sprite.height());
+            runLeftFrames.append(frm);
+        }
     }
 
-    standTimer = new QTimer();
-    standTimer->setInterval(40);
-    connect(standTimer, &QTimer::timeout, this, &Player::standRightAnimate);
-    standTimer->start();
+    SRTimer = new QTimer();
+    SRTimer->setInterval(40);
+    connect(SRTimer, &QTimer::timeout, this, &Player::animate);
+    SRTimer->start();
 
+    width = standRightFrames.at(0)->width();
     image->setPixmap(*standRightFrames.at(0));
     scene->addItem(image);
 
@@ -66,18 +73,46 @@ void Player::draw(QGraphicsScene *scene) {
     heightAnimator->start();
     connect(heightAnimator, &QPropertyAnimation::finished, this, &Player::handleGravity);
 
+    widthAnimator = new QPropertyAnimation(this, "Width", this);
+    connect(widthAnimator, &QPropertyAnimation::finished, this, &Player::stopRunAnimate);
+
     image->setPos(position.x, position.y);
 }
 
 Player::~Player() {
     delete image;
+    delete SRTimer;
+    delete heightAnimator;
+    delete widthAnimator;
     qDeleteAll(standRightFrames);
+    qDeleteAll(standLeftFrames);
+    qDeleteAll(runRightFrames);
+    qDeleteAll(runLeftFrames);
 }
 
-void Player::standRightAnimate() {
-    if (frame >= 59)
-        frame = -1;
-    image->setPixmap(*standRightFrames.at(++frame));
+void Player::animate() {
+    switch (state) {
+        case standRight:
+            if (frame >= 59)
+                frame = -1;
+            image->setPixmap(*standRightFrames.at(++frame));
+            break;
+        case standLeft:
+            if (frame >= 59)
+                frame = -1;
+            image->setPixmap(*standLeftFrames.at(++frame));
+            break;
+        case runRight:
+            if (frame >= 29)
+                frame = -1;
+            image->setPixmap(*runRightFrames.at(++frame));
+            break;
+        case runLeft:
+            if (frame >= 29)
+                frame = -1;
+            image->setPixmap(*runLeftFrames.at(++frame));
+            break;
+    }
 }
 
 void Player::handleGravity() {
@@ -112,7 +147,38 @@ void Player::handleMovement(QKeyEvent *keyEvent) {
         case Qt::Key::Key_Up:
             handleUpMovement();
             break;
+        case Qt::Key::Key_Right:
+            handleRightMovement();
+            break;
+        case Qt::Key::Key_Left:
+            handleLeftMovement();
+            break;
     }
+}
+
+void Player::handleRightMovement() {
+    state = runRight;
+    widthAnimator->stop();
+    widthAnimator->setStartValue(image->x());
+    widthAnimator->setEndValue(image->x() + 2 * width);
+    widthAnimator->setDuration(700);
+    widthAnimator->start();
+}
+
+void Player::handleLeftMovement() {
+    state = runLeft;
+    widthAnimator->stop();
+    widthAnimator->setStartValue(image->x());
+    widthAnimator->setEndValue(image->x() - 2 * width);
+    widthAnimator->setDuration(700);
+    widthAnimator->start();
+}
+
+void Player::stopRunAnimate() {
+    if (state == runRight)
+        state = standRight;
+    else if (state == runLeft)
+        state = standLeft;
 }
 
 
