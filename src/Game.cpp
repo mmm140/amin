@@ -21,22 +21,24 @@ Game::Game() {
     speed = scene->width() / 10;
 
     player = new Player(this, speed);
+    player->draw(scene);
+    player->setZValue(2);
+    connect(player, &Player::gameOver, this, &Game::handleGameOver);
+    connect(player, &Player::gameVictory, this, &Game::handleVictory);
 
     auto hill = new Decorator(scene, speed);
     connect(player, &Player::BGMovement, hill, &Decorator::handle_leftMovement);
     connect(player, &Player::BGStop, hill, &Decorator::stopMovement);
-    hill->position = Position(0,0);
+    hill->position = Position(0, scene->height() * (3.0 / 8.0));
+    hill->setZValue(1);
     hill->draw(scene);
     decoration.push_back(hill);
-
-    player->draw(scene);
-    connect(player, &Player::gameOver, this, &Game::handleGameOver);
-    connect(player, &Player::gameVictory, this, &Game::handleVictory);
 
     auto platform = new Platform(scene, speed);
     connect(player, &Player::BGMovement, platform, &Platform::handle_leftMovement);
     connect(player, &Player::BGStop, platform, &Platform::stopMovement);
     platform->position = Position(-300,scene->height() - platform->height);
+    platform->setZValue(3);
     platform->draw(scene);
     platforms.push_back(platform);
 
@@ -44,6 +46,7 @@ Game::Game() {
     connect(player, &Player::BGMovement, platform2, &Platform::handle_leftMovement);
     connect(player, &Player::BGStop, platform2, &Platform::stopMovement);
     platform2->position = Position(900,scene->height() - platform->height);
+    platform2->setZValue(3);
     platform2->draw(scene);
     platforms.push_back(platform2);
 
@@ -114,7 +117,8 @@ void Game::handleBackGroundMovement()
         auto hill = new Decorator(scene, speed);
         connect(player, &Player::BGMovement, hill, &Decorator::handle_leftMovement);
         connect(player, &Player::BGStop, hill, &Decorator::stopMovement);
-        hill->position = Position(scene->width() + (rand() % (int) (scene->width() * 2)),0);
+        hill->position = Position(scene->width() + (rand() % (int) scene->width()),scene->height() * (3.0 / 8.0));
+        hill->setZValue(1);
         hill->draw(scene);
         decoration.push_back(hill);
         t = time(0) + 2;
