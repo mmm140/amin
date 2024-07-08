@@ -16,7 +16,7 @@ public:
     void draw(QGraphicsScene *scene) override;
 public slots:
 	void handle_leftMovement();
-    void stopRunAnimate();
+    void stopMovement();
 };
 
 #endif //AMIN_PLATFORM_H

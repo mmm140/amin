@@ -67,6 +67,7 @@ signals:
     void gameOver();
     void gameVictory();
     void BGMovement();
+	void BGStop();
 };
 
 #endif //AMIN_PLAYER_H

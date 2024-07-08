@@ -31,6 +31,6 @@ void Platform::handle_leftMovement()
     widthAnimator->start();
 }
 
-void Platform::stopRunAnimate() {
-
+void Platform::stopMovement() {
+    widthAnimator->stop();
 }

@@ -210,6 +210,7 @@ void Player::handleRightMovement() {
 }
 
 void Player::handleLeftMovement() {
+	emit BGStop();
     rightRunEnable = true;
     if (state != runLeft) {
         state = runLeft;

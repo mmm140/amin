@@ -29,12 +29,14 @@ Game::Game() {
 
     auto platform = new Platform(scene, speed);
     connect(player, &Player::BGMovement, platform, &Platform::handle_leftMovement);
+    connect(player, &Player::BGStop, platform, &Platform::stopMovement);
     platform->position = Position(-300,scene->height() - platform->height);
     platform->draw(scene);
     platforms.push_back(platform);
 
     auto platform2 = new Platform(scene, speed);
     connect(player, &Player::BGMovement, platform2, &Platform::handle_leftMovement);
+    connect(player, &Player::BGStop, platform2, &Platform::stopMovement);
     platform2->position = Position(900,scene->height() - platform->height);
     platform2->draw(scene);
     platforms.push_back(platform2);
