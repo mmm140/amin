@@ -4,6 +4,7 @@
 #include "Platform.h"
 #include <QPainter>
 
+
 Game::Game() {
     view = new QGraphicsView();
     view->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
