@@ -16,8 +16,8 @@ enum State{
 
 class Player : public Bodyobject {
     Q_OBJECT
-    Q_PROPERTY(qreal Height READ (image->y) WRITE (image->setY))
-    Q_PROPERTY(qreal Width READ (image->x) WRITE (image->setX))
+    Q_PROPERTY(qreal Height READ y WRITE setY)
+    Q_PROPERTY(qreal Width READ x WRITE setX)
 private:
     State state{standRight};
     int frame{};
@@ -30,9 +30,10 @@ private:
     QPropertyAnimation *widthAnimator{};
     int sceneHeight;
     int speed;
-    Position velocity;
+    bool collideGroundEnable{true};
+    bool GravityEnable{true};
+//    Position velocity;
 public:
-    Player();
     ~Player() override;
     void draw(QGraphicsScene *scene) override;
     void handleRightMovement();
@@ -45,6 +46,7 @@ public slots:
     void animate();
     void handleGravity();
     void stopRunAnimate();
+    void collideGround();
 };
 
 #endif //AMIN_PLAYER_H

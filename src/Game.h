@@ -16,7 +16,7 @@ private:
     std::vector<Decorator> decoration;
     int amountDistance;
 public:
-    Player player;
+    Player *player;
     Game();
     ~Game();
     void handleGameOver();

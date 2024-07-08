@@ -1,21 +1,14 @@
 #include "Player.h"
-#include <QGraphicsPixmapItem>
-#include <QGraphicsScene>
 #include <QKeyEvent>
 #include <QGraphicsItem>
 #include <QApplication>
-
-Player::Player() : velocity(10, 0) {
-    speed = 10;
-}
+#include "Platform.h"
 
 void Player::draw(QGraphicsScene *scene) {
     width = scene->width();
     height = scene->height() / 3;
     position = Position(0, 0);
     sceneHeight = scene->height();
-
-    image = new QGraphicsPixmapItem(nullptr);
 
     {
         QPixmap sprite(":/images/SStandR");
@@ -63,8 +56,10 @@ void Player::draw(QGraphicsScene *scene) {
     SRTimer->start();
 
     width = standRightFrames.at(0)->width();
-    image->setPixmap(*standRightFrames.at(0));
-    scene->addItem(image);
+    setPixmap(*standRightFrames.at(0));
+    scene->addItem(this);
+
+    speed = width * 2;
 
     heightAnimator = new QPropertyAnimation(this, "Height", this);
     heightAnimator->setStartValue(position.y);
@@ -76,11 +71,10 @@ void Player::draw(QGraphicsScene *scene) {
     widthAnimator = new QPropertyAnimation(this, "Width", this);
     connect(widthAnimator, &QPropertyAnimation::finished, this, &Player::stopRunAnimate);
 
-    image->setPos(position.x, position.y);
+    setPos(position.x, position.y);
 }
 
 Player::~Player() {
-    delete image;
     delete SRTimer;
     delete heightAnimator;
     delete widthAnimator;
@@ -95,39 +89,45 @@ void Player::animate() {
         case standRight:
             if (frame >= 59)
                 frame = -1;
-            image->setPixmap(*standRightFrames.at(++frame));
+            setPixmap(*standRightFrames.at(++frame));
             break;
         case standLeft:
             if (frame >= 59)
                 frame = -1;
-            image->setPixmap(*standLeftFrames.at(++frame));
+            setPixmap(*standLeftFrames.at(++frame));
             break;
         case runRight:
             if (frame >= 29)
                 frame = -1;
-            image->setPixmap(*runRightFrames.at(++frame));
+            setPixmap(*runRightFrames.at(++frame));
             break;
         case runLeft:
             if (frame >= 29)
                 frame = -1;
-            image->setPixmap(*runLeftFrames.at(++frame));
+            setPixmap(*runLeftFrames.at(++frame));
             break;
     }
+
+    if (collideGroundEnable)
+        collideGround();
 }
 
 void Player::handleGravity() {
-    heightAnimator->stop();
-    heightAnimator->setStartValue(image->y());
-    heightAnimator->setEndValue(sceneHeight);
-    heightAnimator->setDuration(1500);
-    heightAnimator->setEasingCurve(QEasingCurve::InQuad);
-    heightAnimator->start();
+    if (GravityEnable) {
+        collideGroundEnable = true;
+        heightAnimator->stop();
+        heightAnimator->setStartValue(y());
+        heightAnimator->setEndValue(sceneHeight);
+        heightAnimator->setDuration(1500);
+        heightAnimator->setEasingCurve(QEasingCurve::InQuad);
+        heightAnimator->start();
+    }
 }
 
 void Player::handleUpMovement() {
     heightAnimator->stop();
-    heightAnimator->setStartValue(image->y());
-    heightAnimator->setEndValue(image->y() - height);
+    heightAnimator->setStartValue(y());
+    heightAnimator->setEndValue(y() - height);
     heightAnimator->setDuration(700);
     heightAnimator->setEasingCurve(QEasingCurve::OutQuad);
     heightAnimator->start();
@@ -143,9 +143,12 @@ bool Player::eventFilter(QObject *watched, QEvent *event) {
 }
 
 void Player::handleMovement(QKeyEvent *keyEvent) {
+    GravityEnable = true;
+
     switch (keyEvent->key()) {
         case Qt::Key::Key_Up:
             handleUpMovement();
+            collideGroundEnable = false;
             break;
         case Qt::Key::Key_Right:
             handleRightMovement();
@@ -153,14 +156,18 @@ void Player::handleMovement(QKeyEvent *keyEvent) {
         case Qt::Key::Key_Left:
             handleLeftMovement();
             break;
+        case Qt::Key::Key_Down:
+            handleDownMovement();
+            collideGroundEnable = true;
+            break;
     }
 }
 
 void Player::handleRightMovement() {
     state = runRight;
     widthAnimator->stop();
-    widthAnimator->setStartValue(image->x());
-    widthAnimator->setEndValue(image->x() + 2 * width);
+    widthAnimator->setStartValue(x());
+    widthAnimator->setEndValue(x() + speed);
     widthAnimator->setDuration(700);
     widthAnimator->start();
 }
@@ -168,8 +175,8 @@ void Player::handleRightMovement() {
 void Player::handleLeftMovement() {
     state = runLeft;
     widthAnimator->stop();
-    widthAnimator->setStartValue(image->x());
-    widthAnimator->setEndValue(image->x() - 2 * width);
+    widthAnimator->setStartValue(x());
+    widthAnimator->setEndValue(x() - speed);
     widthAnimator->setDuration(700);
     widthAnimator->start();
 }
@@ -181,4 +188,29 @@ void Player::stopRunAnimate() {
         state = standLeft;
 }
 
+void Player::handleDownMovement() {
+    heightAnimator->stop();
+    heightAnimator->setStartValue(y());
+    heightAnimator->setEndValue(sceneHeight);
+    heightAnimator->setDuration(500);
+    heightAnimator->setEasingCurve(QEasingCurve::InQuad);
+    heightAnimator->start();
+}
 
+void Player::collideGround() {
+    for (QGraphicsItem *Item : collidingItems())
+    {
+        Platform *platform = dynamic_cast<Platform *>(Item);
+        if (platform)
+        {
+            heightAnimator->stop();
+            heightAnimator->setStartValue(y());
+            heightAnimator->setEndValue(platform->y() - height);
+            heightAnimator->setDuration(100);
+            heightAnimator->setEasingCurve(QEasingCurve::OutQuad);
+            heightAnimator->start();
+            GravityEnable = false;
+            break;
+        }
+    }
+}

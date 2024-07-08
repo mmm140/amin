@@ -3,14 +3,14 @@
 
 #include <QGraphicsPixmapItem>
 #include <QObject>
+#include <QGraphicsScene>
 #include "Position.h"
 
-class Bodyobject : public QObject {
+class Bodyobject : public QObject, public QGraphicsPixmapItem {
 protected:
     int width;
     int height;
     Position position;
-    QGraphicsPixmapItem *image{nullptr};
 public:
     Bodyobject();
     Bodyobject(int width, int height, Position position);

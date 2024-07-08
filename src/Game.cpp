@@ -1,6 +1,7 @@
 #include "Game.h"
 #include <QScreen>
 #include <QApplication>
+#include "Platform.h"
 
 Game::Game() {
     view = new QGraphicsView();
@@ -14,7 +15,12 @@ Game::Game() {
     view->setScene(scene);
     scene->setSceneRect(0, 0, view->width(), view->height());
     scene->setBackgroundBrush(QBrush("#124552"));
-    player.draw(scene);
+
+    player = new Player();
+    player->draw(scene);
+
+    auto platform = new Platform();
+    platform->draw(scene);
 }
 
 Game::~Game() {

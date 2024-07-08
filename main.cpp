@@ -7,7 +7,7 @@ int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
 
     Game game;
-    a.installEventFilter(&game.player);
+    a.installEventFilter(game.player);
 
     return QApplication::exec();
 }
