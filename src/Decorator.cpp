@@ -12,8 +12,7 @@ void Decorator::draw(QGraphicsScene *scene) {
 	widthAnimator = new QPropertyAnimation(this, "Width", this);
 }
 
-Decorator::Decorator(QGraphicsScene *scene) {
-	int speed;
+Decorator::Decorator(QGraphicsScene *scene, int speed) {
 	this->speed=speed;
     width = scene->width();
     height = scene->height() / 2;

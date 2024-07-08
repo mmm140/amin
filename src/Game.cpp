@@ -18,16 +18,20 @@ Game::Game() {
     scene->setSceneRect(0, 0, view->width(), view->height());
     scene->setBackgroundBrush(QBrush("#124552"));
 
-    int speed = scene->width() / 10;
+    speed = scene->width() / 10;
 
     player = new Player(this, speed);
 
-    auto hill = new Decorator(scene,player->speed);
+    auto hill = new Decorator(scene, speed);
     connect(player, &Player::BGMovement, hill, &Decorator::handle_leftMovement);
     connect(player, &Player::BGStop, hill, &Decorator::stopMovement);
     hill->position = Position(0,0);
     hill->draw(scene);
     decoration.push_back(hill);
+
+    player->draw(scene);
+    connect(player, &Player::gameOver, this, &Game::handleGameOver);
+    connect(player, &Player::gameVictory, this, &Game::handleVictory);
 
     auto platform = new Platform(scene, speed);
     connect(player, &Player::BGMovement, platform, &Platform::handle_leftMovement);
@@ -43,13 +47,9 @@ Game::Game() {
     platform2->draw(scene);
     platforms.push_back(platform2);
 
-    player->draw(scene);
-    connect(player, &Player::gameOver, this, &Game::handleGameOver);
-    connect(player, &Player::gameVictory, this, &Game::handleVictory);
-
     amountDistance = 4000;
     currentDistance = 0;
-    connect(player, &Player::BGMovement, this, &Game::hadleBackGroundMovement);
+    connect(player, &Player::BGMovement, this, &Game::handleBackGroundMovement);
 }
 
 Game::~Game() {
@@ -105,11 +105,11 @@ void Game::closeGameFunction() {
     QApplication::exit(0);
 }
 
-void Game::hadleBackGroundMovement()
+void Game::handleBackGroundMovement()
 {
-    srand(time(0);
-    rand()%scene->width;
-    auto hill = new Decorator(scene,player->speed);
+    srand(time(0));
+    rand() % ((int) scene->width());
+    auto hill = new Decorator(scene, speed);
     connect(player, &Player::BGMovement, hill, &Decorator::handle_leftMovement);
     connect(player, &Player::BGStop, hill, &Decorator::stopMovement);
 }

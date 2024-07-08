@@ -17,6 +17,7 @@ private:
     std::vector<Decorator *> decoration;
     QGraphicsTextItem *textItem;
     QTimer *closeGame{};
+    int speed;
 public:
     Player *player;
     Game();
@@ -27,7 +28,7 @@ public slots:
     void handleGameOver();
     void handleVictory();
     void closeGameFunction();
-	void hadleBackGroundMovement();
+	void handleBackGroundMovement();
 };
 
 #endif //AMIN_GAME_H
