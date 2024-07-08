@@ -17,7 +17,7 @@ Game::Game() {
     scene->setSceneRect(0, 0, view->width(), view->height());
     scene->setBackgroundBrush(QBrush("#124552"));
 
-    player = new Player();
+    player = new Player(this);
     player->draw(scene);
     connect(player, &Player::gameOver, this, &Game::handleGameOver);
     connect(player, &Player::gameVictory, this, &Game::handleVictory);
@@ -25,15 +25,22 @@ Game::Game() {
     auto platform = new Platform(scene);
     platform->position = Position(-300,scene->height() - platform->height);
     platform->draw(scene);
+    platforms.push_back(platform);
 
     auto platform2 = new Platform(scene);
     platform2->position = Position(900,scene->height() - platform->height);
     platform2->draw(scene);
+    platforms.push_back(platform2);
+
+    amountDistance = 4000;
+    currentDistance = 0;
 }
 
 Game::~Game() {
     delete view;
     delete scene;
+    qDeleteAll(platforms);
+    qDeleteAll(decoration);
 }
 
 void Game::handleGameOver() {
@@ -42,12 +49,12 @@ void Game::handleGameOver() {
     QRect rect((scene->width() - width) / 2, (scene->height() - height) / 2, width, height);
     scene->addRect(rect, QPen(QBrush("gray"), 3), QBrush("#21393F"));
 
-    gameOverText = new QGraphicsTextItem;
-    gameOverText->setPlainText("GameOver");
-    gameOverText->setFont(QFont(nullptr, 50));
-    gameOverText->setPos(rect.x() + rect.width() / 7,rect.y() + rect.height() / 7);
-    gameOverText->setDefaultTextColor(QColor("#D62020"));
-    scene->addItem(gameOverText);
+    textItem = new QGraphicsTextItem;
+    textItem->setPlainText("GameOver");
+    textItem->setFont(QFont(nullptr, 50));
+    textItem->setPos(rect.x() + rect.width() / 7,rect.y() + rect.height() / 7);
+    textItem->setDefaultTextColor(QColor("#D62020"));
+    scene->addItem(textItem);
 
     closeGame = new QTimer;
     closeGame->setInterval(2000);
@@ -56,13 +63,28 @@ void Game::handleGameOver() {
 }
 
 void Game::handleVictory() {
+    int width = 500;
+    int height = 250;
+    QRect rect((scene->width() - width) / 2, (scene->height() - height) / 2, width, height);
+    scene->addRect(rect, QPen(QBrush("gray"), 3), QBrush("#21393F"));
 
+    textItem = new QGraphicsTextItem;
+    textItem->setPlainText("Victory");
+    textItem->setFont(QFont(nullptr, 50));
+    textItem->setPos(rect.x() + rect.width() / 7,rect.y() + rect.height() / 7);
+    textItem->setDefaultTextColor(QColor("#43D620"));
+    scene->addItem(textItem);
+
+    closeGame = new QTimer;
+    closeGame->setInterval(2000);
+    connect(closeGame, &QTimer::timeout, this, &Game::closeGameFunction);
+    closeGame->start();
 }
 
 void Game::closeGameFunction() {
     closeGame->stop();
-    scene->removeItem(gameOverText);
-    delete gameOverText;
+    scene->removeItem(textItem);
+    delete textItem;
     delete closeGame;
     QApplication::exit(0);
 }

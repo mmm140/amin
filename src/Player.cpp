@@ -112,9 +112,10 @@ void Player::animate() {
             break;
     }
 
+    checkGameOver();
+    checkVictory();
     if (collideGroundEnable)
         collideGround();
-    checkGameOver();
     if (collideLeftEnable)
         collideLeftScreen();
     collideUpScreen();
@@ -309,4 +310,16 @@ void Player::stopRunTimer() {
 void Player::fallInHole() {
     if (y() > scene()->height() * 6.0 / 7 - height + 2)
         jumpEnable = false;
+}
+
+void Player::checkVictory() {
+    static bool flag = true;
+    if (game->currentDistance >= game->amountDistance && flag) {
+        flag = false;
+        emit gameVictory();
+    }
+}
+
+Player::Player(Game *game) {
+    this->game = game;
 }
